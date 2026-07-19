@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CareerOS Build Week</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main class="shell" aria-labelledby="page-title">
+      <p class="eyebrow">CareerOS | Build Week</p>
+      <h1 id="page-title">Your career is more than a resume.</h1>
+      <p class="summary">CareerOS is a lifelong AI career companion and evidence-grounded adviser that transforms professional experience into evidence, readiness, direction, and future opportunity.</p>
+      <p class="footnote">A resume summarizes selected history. CareerOS preserves the evidence behind that history, explains what it supports today, and identifies what to build next.</p>
+      <section class="hero-actions">
+        <button id="start-guided" type="button">Start Guided Demo</button>
+        <button id="reset-demo" type="button">Reset Demo</button>
+        <p id="guided-status" class="footnote">Career DNA current through 2026-06-30.</p>
+      </section>
+      <section id="guided-panel" class="status" aria-live="polite" hidden>
+        <p id="guided-progress" class="eyebrow"></p><h2 id="guided-title"></h2><p id="guided-copy"></p>
+        <div class="dataset-switch"><button id="guided-back" type="button">Back</button><button id="guided-next" type="button">Next</button><button id="guided-exit" type="button">Exit Guided Demo</button></div>
+      </section>
+      <section class="command-center" aria-label="Career Command Center">
+        <div><p class="eyebrow">Career Command Center</p><h2>Approved Demonstration Profile</h2><p class="footnote">Federal growth, capture, and mission-technology leader.</p></div>
+        <div id="career-dna-summary" class="summary-grid" aria-live="polite"><p>Loading Career DNA summary.</p></div>
+        <section id="next-action-card" class="next-action"><h3>Next evidence-building action</h3><p>Select a target role to see the deterministic recommendation.</p></section>
+      </section>
+      <section id="career-horizon" class="status" aria-live="polite"><h2>Your Career Horizon</h2><p class="footnote">Loading evidence-supported direction.</p></section>
+      <section id="future-value" class="status" aria-live="polite"><h2>Future Value of Recent Evidence</h2><p class="footnote">Add a validated session achievement to see reusable future value.</p></section>
+      <section class="status" aria-label="Target-role readiness">
+        <h2>Target-role readiness</h2><p id="data-status">Loading approved Career DNA.</p>
+        <label for="role-selector">Target role</label><select id="role-selector" aria-label="Select target role"></select>
+      </section>
+      <section id="analysis" class="analysis" aria-live="polite"></section>
+      <section class="status growth-panel">
+        <h2>Add Achievement</h2><p id="achievement-status">Load the prepared Synthetic Build Week Demonstration or add an achievement to your user-owned Career DNA workspace.</p>
+        <div class="dataset-switch"><button id="load-fixture" type="button">Load Demo Achievement</button><button id="validate-achievement" type="button">Validate</button><button id="add-achievement" type="button">Add to Career DNA</button><button id="reset-session" type="button">Reset Session</button></div>
+        <textarea id="achievement-input" rows="10" aria-label="Achievement JSON input"></textarea>
+      </section>
+      <section id="comparison" class="analysis" aria-live="polite"></section>
+      <section id="timeline" class="status"><h2>Career Timeline</h2><p class="footnote">No session evidence added. Approved baseline evidence remains read-only.</p></section>
+      <section class="status"><h2>CareerOS Across Your Career</h2><p class="footnote">A resume records selected history. Career DNA preserves the evidence, context, limitations, and growth behind that history.</p><div class="lifecycle"><article><strong>Discover</strong><p>Identify target paths and evidence gaps.</p></article><article><strong>Perform</strong><p>Capture achievements while work happens.</p></article><article><strong>Review</strong><p>Prepare evidence-backed advancement narratives.</p></article><article><strong>Advance</strong><p>Negotiate and grow with proof.</p></article><article><strong>Transition</strong><p>Analyze opportunities with current Career DNA.</p></article><article><strong>Legacy</strong><p>Preserve reusable expertise and stories.</p></article></div></section>
+      <section class="status" aria-label="Loaded evidence"><h2>Explore Career DNA <span id="approved-count"></span></h2><div id="evidence-list" class="record-list"></div></section>
+      <section class="status" aria-label="Prepared roles"><h2>Prepared roles <span id="role-count"></span></h2><div id="role-list" class="record-list"></div></section>
+      <p id="rejected-count" class="footnote"></p>
+    </main>
+    <dialog id="evidence-drawer"><button id="close-drawer" type="button">Close</button><div id="drawer-content"></div></dialog>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "careeros-buildweek-demo",
+  "version": "0.6.0",
+  "private": true,
+  "type": "module",
+  "description": "CareerOS Build Week Milestone 6 local Career Companion Experience.",
+  "scripts": {
+    "start": "node server.mjs",
+    "health": "node tests/smoke.mjs",
+    "test": "node tests/validator.mjs && node tests/candidate-review.mjs && node tests/analysis-engine.mjs && node tests/growth-loop.mjs && node tests/companion-experience.mjs && node tests/ui-regression.mjs && node tests/guided-demo.mjs && node tests/career-horizon.mjs && node tests/career-trajectory.mjs && node tests/pattern-detection.mjs && node tests/reset-state.mjs && node tests/accessibility.mjs && node tests/responsive-layout.mjs && node tests/smoke.mjs && node tests/privacy-boundary.mjs",
+    "test:growth": "node tests/growth-loop.mjs",
+    "test:analysis": "node tests/analysis-engine.mjs",
+    "test:candidates": "node tests/candidate-review.mjs",
+    "test:validator": "node tests/validator.mjs",
+    "test:privacy": "node tests/privacy-boundary.mjs"
+  }
+}
