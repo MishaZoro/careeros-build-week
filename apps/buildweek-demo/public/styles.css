@@ -63,3 +63,19 @@ textarea { width: 100%; margin-top: 1rem; padding: .75rem; border: 1px solid #63
 .next-action h3 { margin: 0; font-size: .95rem; }
 .next-action p { margin: .55rem 0 0; color: #c2cfdf; }
 @media(max-width:700px){.summary-grid{grid-template-columns:1fr}.summary-wide{grid-column:auto}}
+.hero-visual {
+  width: 100%;
+  margin: 1.5rem 0 2rem;
+  text-align: center;
+}
+
+.hero-visual img {
+  width: 100%;
+  max-width: 1200px;
+  display: block;
+  margin: 0 auto;
+  border-radius: 18px;
+  box-shadow:
+    0 0 30px rgba(0,160,255,.20),
+    0 12px 40px rgba(0,0,0,.45);
+}
