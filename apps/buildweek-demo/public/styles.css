@@ -66,16 +66,18 @@ textarea { width: 100%; margin-top: 1rem; padding: .75rem; border: 1px solid #63
 .hero-visual {
   width: 100%;
   margin: 1.5rem 0 2rem;
-  text-align: center;
+  overflow: hidden;
+  border-radius: 18px;
 }
 
-.CarrerOS_Hero-visual img {
+.hero-visual img {
   width: 100%;
-  max-width: 1200px;
+  height: auto;
   display: block;
-  margin: 0 auto;
+  margin: 0;
   border-radius: 18px;
+  object-fit: cover;
   box-shadow:
-    0 0 30px rgba(0,160,255,.20),
-    0 12px 40px rgba(0,0,0,.45);
+    0 0 30px rgba(0, 160, 255, 0.20),
+    0 12px 40px rgba(0, 0, 0, 0.45);
 }
