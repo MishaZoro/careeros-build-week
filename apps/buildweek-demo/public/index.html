@@ -170,7 +170,7 @@
         <p class="footnote">Loading evidence-supported direction.</p>
       </section>
 
-      <section class="status">
+      <section id="role-readiness-card" class="status">
         <h2>Target-role readiness</h2>
         <p id="data-status">Loading approved Career DNA.</p>
         <label for="role-selector">Target role</label>
@@ -193,15 +193,32 @@
           </section>
 
           <section class="status growth-panel">
-            <h2>Add Achievement</h2>
-            <p id="achievement-status">Load the prepared Synthetic Build Week Demonstration or add an achievement to your user-owned Career DNA workspace.</p>
+            <h2>Build New Career Evidence</h2>
+            <p>Choose one approved demonstration achievement, validate its source and limitations, and decide whether to add it to Active Career DNA.</p>
+            <label for="demo-achievement-selector">Choose a Demonstration Achievement</label>
+            <select id="demo-achievement-selector" aria-label="Choose a demonstration achievement" disabled>
+              <option>Loading prepared demonstration achievement…</option>
+            </select>
+
+            <section class="achievement-summary-card" aria-live="polite">
+              <div id="achievement-status">
+                <h3>Demonstration Achievement</h3>
+                <p>No demonstration achievement is loaded.</p>
+              </div>
+            </section>
+
             <div class="dataset-switch">
-              <button id="load-fixture" type="button">Load Demo Achievement</button>
-              <button id="validate-achievement" type="button">Validate</button>
-              <button id="add-achievement" type="button">Add to Career DNA</button>
+              <button id="load-fixture" type="button">Load Selected Achievement</button>
+              <button id="validate-achievement" type="button" disabled>Validate</button>
+              <button id="add-achievement" type="button" disabled>Add to Career DNA</button>
               <button id="reset-session" type="button">Reset Session</button>
             </div>
-            <textarea id="achievement-input" rows="10" aria-label="Achievement JSON input"></textarea>
+
+            <details class="technical-evidence-record">
+              <summary>View Technical Evidence Record</summary>
+              <p class="footnote">This structured record is shown for transparency and traceability. Most users will interact with the human-readable evidence summary above.</p>
+              <textarea id="achievement-input" rows="10" aria-label="Achievement JSON input"></textarea>
+            </details>
           </section>
 
           <section id="comparison" class="analysis" aria-live="polite"></section>
