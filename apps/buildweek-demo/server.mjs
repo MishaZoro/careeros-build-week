@@ -175,7 +175,7 @@ export function createAppServer() {
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const port = Number(process.env.PORT ?? 4173);
   const server = createAppServer();
-  server.listen(port, '127.0.0.1', () => {
-    console.log(`CareerOS Build Week scaffold listening at http://127.0.0.1:${port}`);
-  });
+  server.listen(port, "0.0.0.0", () => {
+  console.log(`CareerOS Build Week scaffold listening on port ${port}`);
+});
 }
