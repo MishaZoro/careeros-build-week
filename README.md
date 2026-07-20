@@ -12,19 +12,19 @@ A lifelong adaptive career companion and evidence-grounded career intelligence p
 
 # Career Lifecycle™
 
-![Career Lifecycle](diagrams/CarrerOS_Lifelong_career_Lifecycle.png)
+![Career Lifecycle](diagrams/CareerOS_Lifelong_career_Lifecycle.png)
 
 ---
 
 # Career Galaxy™
 
-![Career Galaxy](diagrams/CarrerOS_Galaxy.png)
+![Career Galaxy](diagrams/CareerOS_Galaxy.png)
 
 ---
 
 # Career Constellation™
 
-![Career Constellation](diagrams/CarrerOS_Constellation.png)
+![Career Constellation](diagrams/CareerOS_Constellation.png)
 
 ---
 
