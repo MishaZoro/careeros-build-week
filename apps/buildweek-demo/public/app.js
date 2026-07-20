@@ -170,6 +170,13 @@ document.querySelector('#reset-session').onclick = resetSession;
 roleSelector.onchange = async () => { await resetSession(); };
 document.querySelector('#close-drawer').onclick = () => drawer.close();
 
+function revealGuidedSection(selector) {
+  const section = document.querySelector(selector);
+  if (!section) return;
+  section.open = true;
+  section.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+}
+
 function renderGuided() {
   const [title, copy] = guidedSteps[guidedStep];
   document.querySelector('#guided-panel').hidden = false;
@@ -179,6 +186,7 @@ function renderGuided() {
   document.querySelector('#guided-back').disabled = guidedStep === 0;
   document.querySelector('#guided-next').textContent = guidedStep === guidedSteps.length - 1 ? 'Finish' : 'Next';
   if (guidedStep === 1 && roleSelector.value !== 'ROLE-003') { roleSelector.value = 'ROLE-003'; resetSession(); }
+  if ([3, 4, 5].includes(guidedStep)) revealGuidedSection('#evidence-workbench-details');
   if (guidedStep === 3) document.querySelector('#load-fixture').focus();
   if (guidedStep === 7) document.querySelector('#guided-status').textContent = 'Guided demo complete. Explore Career DNA or restart the synthetic session.';
 }
