@@ -471,6 +471,43 @@ li {
   margin: .65rem 0 0;
 }
 
+.command-center-details {
+  min-width: 0;
+  border: 1px solid rgb(105 168 223 / 42%);
+  border-radius: var(--radius-md);
+  background: rgb(9 28 48 / 72%);
+}
+
+.command-center-details summary {
+  display: flex;
+  align-items: center;
+  min-height: 3.25rem;
+  padding: .9rem 1.1rem;
+  color: #d9efff;
+  font-weight: 750;
+  cursor: pointer;
+  list-style-position: inside;
+}
+
+.command-center-details summary::marker {
+  color: var(--blue);
+}
+
+.command-center-details[open] summary {
+  border-bottom: 1px solid rgb(105 168 223 / 30%);
+}
+
+.command-center-details summary:focus-visible {
+  outline: 3px solid #a8dcff;
+  outline-offset: 3px;
+}
+
+.details-content {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+}
+
 label,
 select {
   display: block;
@@ -664,6 +701,23 @@ textarea {
   font-size: clamp(1.1rem, 2vw, 1.4rem);
 }
 
+/* Companion horizon */
+.companion-horizon-full {
+  width: min(1440px, 100%);
+  margin: 0 auto clamp(2.5rem, 6vw, 5rem);
+  padding: 0 clamp(.75rem, 2vw, 2rem);
+}
+
+.companion-horizon-full-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid rgb(130 190 244 / 48%);
+  border-radius: var(--radius-lg);
+  background: #091a2d;
+  box-shadow: 0 1.4rem 3.5rem rgb(0 0 0 / 30%);
+}
+
 /* Dialog */
 dialog {
   width: min(700px, calc(100% - 2rem));
@@ -713,7 +767,7 @@ dialog::backdrop {
   }
 
   .landing {
-    margin: 2rem 0;
+    margin: 1.5rem 0;
     padding: 1.3rem;
     border-radius: 1rem;
   }
@@ -765,6 +819,21 @@ dialog::backdrop {
   .analysis-group {
     padding: 1rem;
   }
+
+  .command-center-details summary {
+    min-height: 2.75rem;
+    padding: .8rem .9rem;
+  }
+
+  .details-content {
+    gap: .8rem;
+    padding: .8rem;
+  }
+
+  .companion-horizon-full {
+    margin-bottom: 2rem;
+    padding-inline: .75rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -788,48 +857,6 @@ dialog::backdrop {
   .landing-image {
     border-radius: .6rem;
   }
-}
-
-.companion-horizon-full {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    margin: 5rem 0 4rem;
-    overflow: visible;
-}
-
-.companion-horizon-full-image {
-    display: block;
-    width: min(92vw, 1800px);
-    height: auto;
-    border-radius: 22px;
-
-    box-shadow:
-        0 40px 120px rgba(0,0,0,.55),
-        0 0 120px rgba(70,140,255,.22);
-
-    transition:
-        transform .5s ease,
-        box-shadow .5s ease;
-}
-
-.companion-horizon-full-image:hover {
-    transform: scale(1.01);
-
-    box-shadow:
-        0 55px 140px rgba(0,0,0,.65),
-        0 0 140px rgba(70,140,255,.30);
-}
-
-@media (max-width: 900px) {
-    .companion-horizon-full {
-        margin: 3rem 0;
-    }
-
-    .companion-horizon-full-image {
-        width: 97vw;
-        border-radius: 16px;
-    }
 }
 
 @media (prefers-reduced-motion: reduce) {
