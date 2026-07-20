@@ -80,14 +80,41 @@ export function createAppServer() {
       return;
     }
     if (url.pathname === '/forward-intelligence.json') {
-      const roleId = url.searchParams.get('role') ?? 'ROLE-003';
-      const role = roles.find((item) => item.id === roleId);
-      if (!role) { response.writeHead(404); response.end(JSON.stringify({ error: 'Prepared role not found.' })); return; }
-      const selected = analyzeRole(role, evidence);
-      const analyses = Object.fromEntries(roles.map((item) => [item.id, analyzeRole(item, evidence)]));
-      const next = nextAction(selected, []);
-      response.writeHead(200, { 'content-type': 'application/json; charset=utf-8' });
-      response.end(JSON.stringify({ horizon: careerHorizon(selected, next), trajectory: careerTrajectory(selected), patterns: detectPatterns(roles, analyses, evidence), next_action: next }));
+      const roleId = url.searchParams.get('role');
+      if (!roleId) {
+        response.writeHead(400, { 'content-type': 'application/json; charset=utf-8' });
+        response.end(JSON.stringify({ error: 'A target role is required.' }));
+        return;
+      }
+
+      const evidencePath = join(curatedDataRoot, 'evidence.json');
+      const rolesPath = join(curatedDataRoot, 'target-roles.json');
+      if (!existsSync(evidencePath) || !existsSync(rolesPath)) {
+        response.writeHead(409, { 'content-type': 'application/json; charset=utf-8' });
+        response.end(JSON.stringify({ error: 'Approved Career DNA data is unavailable.' }));
+        return;
+      }
+
+      try {
+        const evidence = validateCollection(JSON.parse(await readFile(evidencePath, 'utf8')), 'evidence').accepted;
+        const roles = validateCollection(JSON.parse(await readFile(rolesPath, 'utf8')), 'role').accepted;
+        const role = roles.find((item) => item.id === roleId);
+        if (!role) {
+          response.writeHead(404, { 'content-type': 'application/json; charset=utf-8' });
+          response.end(JSON.stringify({ error: 'Prepared role not found.' }));
+          return;
+        }
+
+        const selected = analyzeRole(role, evidence);
+        const analyses = Object.fromEntries(roles.map((item) => [item.id, analyzeRole(item, evidence)]));
+        const next = nextAction(selected, []);
+        response.writeHead(200, { 'content-type': 'application/json; charset=utf-8' });
+        response.end(JSON.stringify({ horizon: careerHorizon(selected, next), trajectory: careerTrajectory(selected), patterns: detectPatterns(roles, analyses, evidence), next_action: next }));
+      } catch (error) {
+        console.error('Career Horizon request failed.', error);
+        response.writeHead(500, { 'content-type': 'application/json; charset=utf-8' });
+        response.end(JSON.stringify({ error: 'Career Horizon is unavailable.' }));
+      }
       return;
     }
 
@@ -148,7 +175,7 @@ export function createAppServer() {
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const port = Number(process.env.PORT ?? 4173);
   const server = createAppServer();
- server.listen(port, '0.0.0.0', () => {
-  console.log(`CareerOS Build Week scaffold listening on port ${port}`);
-});
+  server.listen(port, '127.0.0.1', () => {
+    console.log(`CareerOS Build Week scaffold listening at http://127.0.0.1:${port}`);
+  });
 }
