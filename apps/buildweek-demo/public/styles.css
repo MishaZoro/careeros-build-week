@@ -508,6 +508,119 @@ li {
   padding: 1rem;
 }
 
+.achievement-summary-card {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid rgb(105 188 248 / 48%);
+  border-radius: var(--radius-sm);
+  background: rgb(10 38 66 / 72%);
+}
+
+.achievement-summary-card h3 {
+  margin: 0 0 .55rem;
+  color: #d7efff;
+}
+
+.achievement-summary-card > div > p {
+  margin: .45rem 0 0;
+}
+
+.achievement-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .75rem;
+  margin-top: 1rem;
+}
+
+.achievement-summary-grid p {
+  display: grid;
+  gap: .25rem;
+  margin: 0;
+  padding: .75rem;
+  border-radius: .5rem;
+  background: rgb(5 25 45 / 66%);
+}
+
+.achievement-summary-grid strong {
+  color: #91cff9;
+  font-size: .78rem;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.achievement-summary-grid .summary-wide {
+  grid-column: 1 / -1;
+}
+
+.validation-checklist {
+  display: grid;
+  gap: .35rem;
+  margin: 1rem 0 0;
+  padding: .9rem 1rem .9rem 2rem;
+  border-left: .25rem solid var(--green);
+  border-radius: .45rem;
+  background: rgb(13 78 57 / 38%);
+}
+
+.validation-checklist li::marker {
+  color: var(--green);
+}
+
+.technical-evidence-record {
+  margin-top: 1rem;
+  border: 1px solid rgb(105 168 223 / 36%);
+  border-radius: var(--radius-sm);
+  background: rgb(5 20 36 / 50%);
+}
+
+.technical-evidence-record summary {
+  min-height: 2.75rem;
+  padding: .75rem .9rem;
+  color: #cfe9ff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.technical-evidence-record > p {
+  padding: 0 .9rem;
+}
+
+.technical-evidence-record textarea {
+  margin: .6rem .9rem .9rem;
+  width: calc(100% - 1.8rem);
+  overflow-wrap: anywhere;
+}
+
+.before-after {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem;
+  align-items: center;
+  color: #dff2ff;
+  font-weight: 750;
+}
+
+.before-after span:nth-child(2) {
+  color: var(--blue);
+  font-size: 1.2rem;
+}
+
+.guided-target {
+  outline: 2px solid rgb(105 202 255 / 90%);
+  outline-offset: 5px;
+  box-shadow: 0 0 0 .35rem rgb(50 163 237 / 12%);
+}
+
+.career-dna-updated {
+  animation: career-dna-update 800ms ease-out;
+}
+
+@keyframes career-dna-update {
+  0% { box-shadow: 0 0 0 0 rgb(83 183 255 / 0%); }
+  45% { box-shadow: 0 0 0 .55rem rgb(83 183 255 / 28%); }
+  100% { box-shadow: 0 0 0 0 rgb(83 183 255 / 0%); }
+}
+
 label,
 select {
   display: block;
@@ -799,6 +912,14 @@ dialog::backdrop {
     grid-column: auto;
   }
 
+  .achievement-summary-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .achievement-summary-grid .summary-wide {
+    grid-column: auto;
+  }
+
   .hero-actions,
   .dataset-switch {
     align-items: stretch;
@@ -828,6 +949,16 @@ dialog::backdrop {
   .details-content {
     gap: .8rem;
     padding: .8rem;
+  }
+
+  .achievement-summary-card,
+  .technical-evidence-record {
+    margin-top: .8rem;
+  }
+
+  .before-after {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   .companion-horizon-full {
