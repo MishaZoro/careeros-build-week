@@ -1,0 +1,2 @@
+import assert from 'node:assert/strict'; import { detectPatterns } from '../lib/pattern-detection.mjs';
+const result = detectPatterns([{ requirements: ['Capture'] }, { requirements: ['Capture'] }], { a: { groups: { caution: [{ requirement: 'Domain', classification: 'caution' }] } } }, [{ id: 'E1', related_role_requirements: ['A', 'B'] }]); assert.deepEqual(result.shared_requirements, ['Capture']); assert.deepEqual(result.persistent_constraints, ['Domain']); console.log('PATTERN_DETECTION_TEST=PASS');

@@ -1,0 +1,1 @@
+import assert from 'node:assert/strict'; import { readFile } from 'node:fs/promises'; const css = await readFile(new URL('../public/styles.css', import.meta.url), 'utf8'); assert.match(css, /@media\(max-width:700px\)/); assert.match(css, /prefers-reduced-motion/); console.log('RESPONSIVE_LAYOUT_TEST=PASS');
