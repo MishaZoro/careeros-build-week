@@ -790,37 +790,46 @@ dialog::backdrop {
   }
 }
 
-.companion-horizon-section {
-    margin-top: 4rem;
-    padding: 0;
+.companion-horizon-full {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 5rem 0 4rem;
     overflow: visible;
-    background: transparent;
-    border: none;
-    border-radius: 1rem;
 }
 
-.companion-horizon-image {
+.companion-horizon-full-image {
     display: block;
-    width: 100%;
+    width: min(92vw, 1800px);
     height: auto;
-    object-fit: cover;
-    border-radius: 1rem;
+    border-radius: 22px;
 
     box-shadow:
-        0 35px 100px rgba(0,0,0,.55),
-        0 0 80px rgba(70,140,255,.18);
+        0 40px 120px rgba(0,0,0,.55),
+        0 0 120px rgba(70,140,255,.22);
 
     transition:
-        transform .45s ease,
-        box-shadow .45s ease;
+        transform .5s ease,
+        box-shadow .5s ease;
 }
 
-.companion-horizon-image:hover {
-    transform: scale(1.015);
+.companion-horizon-full-image:hover {
+    transform: scale(1.01);
 
     box-shadow:
-        0 45px 120px rgba(0,0,0,.60),
-        0 0 120px rgba(70,140,255,.25);
+        0 55px 140px rgba(0,0,0,.65),
+        0 0 140px rgba(70,140,255,.30);
+}
+
+@media (max-width: 900px) {
+    .companion-horizon-full {
+        margin: 3rem 0;
+    }
+
+    .companion-horizon-full-image {
+        width: 97vw;
+        border-radius: 16px;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
