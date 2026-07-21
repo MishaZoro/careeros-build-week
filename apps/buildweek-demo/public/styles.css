@@ -335,7 +335,7 @@ li {
 }
 
 .hero-actions button:nth-child(2),
-.dataset-switch button:not(#load-fixture):not(#add-achievement) {
+.dataset-switch button:not(#load-fixture):not(#add-to-career-dna-action) {
   border-color: rgb(153 181 213 / 56%);
   color: #dce9f8;
   background: rgb(33 57 84 / 88%);
@@ -343,7 +343,7 @@ li {
 }
 
 .hero-actions button:nth-child(2):hover:not(:disabled),
-.dataset-switch button:not(#load-fixture):not(#add-achievement):hover:not(:disabled) {
+.dataset-switch button:not(#load-fixture):not(#add-to-career-dna-action):hover:not(:disabled) {
   border-color: rgb(180 217 246 / 78%);
   background: #314f73;
 }
@@ -369,9 +369,11 @@ li {
 
 #guided-panel.guided-active {
   position: fixed;
+  margin: 0;
   top: 1rem;
+  right: 1rem;
   left: auto;
-  width: clamp(420px, 34vw, 520px);
+  width: clamp(450px, 38vw, 500px);
   max-height: calc(100vh - 2rem);
   overflow: auto;
   z-index: 20;
@@ -526,6 +528,26 @@ li {
   background: rgb(10 38 66 / 72%);
 }
 
+#recommended-evidence-section,
+#loaded-evidence-summary,
+#target-role-readiness,
+#what-changed,
+#updated-career-intelligence {
+  max-width: 620px;
+  scroll-margin-top: 1rem;
+}
+
+body.guided-demo-running #target-role-readiness,
+body.guided-demo-running #recommended-evidence-section,
+body.guided-demo-running #what-changed,
+body.guided-demo-running #updated-career-intelligence {
+  width: min(620px, calc(100% - 520px));
+}
+
+body.guided-demo-running #loaded-evidence-summary {
+  width: 100%;
+}
+
 .achievement-summary-card h3 {
   margin: 0 0 .55rem;
   color: #d7efff;
@@ -533,6 +555,48 @@ li {
 
 .achievement-summary-card > div > p {
   margin: .45rem 0 0;
+}
+
+.recommendation-summary {
+  display: grid;
+  gap: .4rem;
+  margin: .8rem 0;
+  padding-left: 1.25rem;
+}
+
+.recommendation-rationale {
+  padding: .8rem;
+  border-left: .25rem solid var(--green);
+  border-radius: .4rem;
+  background: rgb(13 78 57 / 28%);
+}
+
+.workflow-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .55rem;
+  margin-top: 1rem;
+}
+
+.completion-badge {
+  padding: .45rem .7rem;
+  border: 1px solid rgb(98 214 170 / 50%);
+  border-radius: 99px;
+  color: #baf3dc;
+  background: rgb(13 78 57 / 36%);
+}
+
+.secondary-workflow-action {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgb(105 168 223 / 24%);
+}
+
+.secondary-workflow-action button {
+  border-color: rgb(153 181 213 / 42%);
+  color: var(--muted);
+  background: transparent;
+  box-shadow: none;
 }
 
 .growth-panel.single-demo-record > label[for="demo-achievement-selector"],
@@ -565,6 +629,16 @@ li {
 
 .achievement-summary-grid .summary-wide {
   grid-column: 1 / -1;
+}
+
+#loaded-evidence-summary .achievement-summary-grid {
+  gap: .45rem;
+}
+
+#loaded-evidence-summary .achievement-summary-grid p {
+  padding: .45rem;
+  font-size: .86rem;
+  line-height: 1.35;
 }
 
 .career-dna-update-summary {
@@ -918,6 +992,13 @@ dialog::backdrop {
     max-height: 42vh;
     margin: 0;
     border-radius: 1rem 1rem 0 0;
+  }
+
+  body.guided-demo-running #target-role-readiness,
+  body.guided-demo-running #recommended-evidence-section,
+  body.guided-demo-running #what-changed,
+  body.guided-demo-running #updated-career-intelligence {
+    width: 100%;
   }
   .shell {
     width: min(100% - 1.5rem, 1180px);

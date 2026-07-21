@@ -21,7 +21,7 @@ assert.match(html, /CareerOS Across Your Career/, 'lifecycle view must render');
 assert.match(html, /Explore Career DNA/, 'evidence exploration must be available');
 assert.match(ui, /createDemoState/, 'guided demo must consume the shared default role state');
 assert.match(ui, /guidedSteps/, 'guided demo must be lightweight application state');
-for (const title of ['Career DNA', 'Choose a Career Direction', 'Review Current Readiness', 'Explore Career Horizon', 'Select New Career Evidence', 'Review and Validate Evidence', 'Add to Career DNA', 'See What Changed', 'Explore Updated Career Intelligence']) assert.match(ui, new RegExp(title), `guided demo must include ${title}`);
+for (const title of ['Career DNA', 'Choose a Career Direction', 'Review Current Readiness', 'Explore Career Horizon', 'Recommended Evidence', 'Review and Validate Evidence', 'Add to Career DNA', 'See What Changed', 'Explore Updated Career Intelligence']) assert.match(ui, new RegExp(title), `guided demo must include ${title}`);
 assert.match(ui, /guided-back/, 'guided back control must be wired');
 assert.match(ui, /guided-next/, 'guided next control must be wired');
 assert.match(ui, /guided-exit/, 'guided exit control must be wired');

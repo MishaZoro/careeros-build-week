@@ -10,13 +10,15 @@ const achievementStatus = document.querySelector('#achievement-status');
 const demoAchievementSelector = document.querySelector('#demo-achievement-selector');
 const loadAchievementButton = document.querySelector('#load-fixture');
 const validateAchievementButton = document.querySelector('#validate-achievement');
-const addAchievementButton = document.querySelector('#add-achievement');
+const addAchievementButton = document.querySelector('#add-to-career-dna-action');
 const drawer = document.querySelector('#evidence-drawer');
 const drawerContent = document.querySelector('#drawer-content');
 const summary = document.querySelector('#career-dna-summary');
 const nextActionCard = document.querySelector('#next-action-card');
 const horizonPanel = document.querySelector('#career-horizon');
 const futureValue = document.querySelector('#future-value');
+const workflowStatus = document.querySelector('#workflow-status');
+const updatedCareerIntelligence = document.querySelector('#updated-career-intelligence');
 let roles = [];
 let baselineEvidence = [];
 let demoState = createDemoState();
@@ -27,7 +29,7 @@ const guidedSteps = [
   ['Choose a Career Direction', 'Select one prepared role to see what your approved Career DNA supports today. You can change the role at any time, and CareerOS will recalculate readiness, evidence fit, limitations, Career Horizon, and trajectory.'],
   ['Review Current Readiness', () => `CareerOS compares ${selectedRoleTitle()} with approved Career DNA and separates direct strength, adjacent potential, transferable capability, caution, and unsupported gaps.`],
   ['Explore Career Horizon', 'CareerOS identifies an evidence-supported direction, a persistent limitation, and the next evidence worth intentionally building for the selected role.'],
-  ['Select New Career Evidence', 'Use the prepared achievement to see how CareerOS evaluates approved evidence while preserving its limitations.'],
+  ['Recommended Evidence', 'CareerOS identified the approved achievement most likely to strengthen readiness for your selected direction. Review the recommendation, then use it to update Career DNA.'],
   ['Review and Validate Evidence', 'Review the full evidence summary, source controls, classification, and retained limitation, then validate it.'],
   ['Add to Career DNA', 'Once validated, the approved achievement can become part of Active Career DNA. CareerOS then recalculates readiness, role fit, Career Horizon, trajectory, and the next evidence recommendation.'],
   ['See What Changed', 'CareerOS changes only the conclusions supported by the new evidence. It strengthens the relevant capability while preserving limitations and unsupported domain gaps.'],
@@ -62,10 +64,10 @@ function displayLimitation(limitation = '') {
 function renderAchievementStatus(state = 'initial', entry = selectedDemonstrationRecord(), growth) {
   const safeEntry = entry ?? {};
   const title = escapeHtml(safeEntry.title ?? 'Demonstration Achievement');
-  const detailGrid = `<div class="achievement-summary-grid"><p><strong>Achievement</strong><span>${title}</span></p><p><strong>Description</strong><span>${escapeHtml(safeEntry.summary)}</span></p><p><strong>Status</strong><span>Approved demonstration record</span></p><p><strong>Capability strengthened</strong><span>${escapeHtml(safeEntry.capabilities?.[0] ?? 'Not available')}</span></p><p><strong>Evidence classification</strong><span>${escapeHtml(safeEntry.classification ?? 'Not available')}</span></p><p><strong>Source controls</strong><span>${escapeHtml(restrictionSummary(safeEntry.restrictions))}</span></p><p class="summary-wide"><strong>Limitation retained</strong><span>${escapeHtml(displayLimitation(safeEntry.limitation ?? 'Not available'))}</span></p></div>`;
+  const detailGrid = `<div class="achievement-summary-grid"><p><strong>Achievement</strong><span>${title}</span></p><p class="summary-wide"><strong>Description</strong><span>${escapeHtml(safeEntry.summary)}</span></p><p><strong>Status</strong><span>Approved demonstration record</span></p><p><strong>Capability strengthened</strong><span>${escapeHtml(safeEntry.capabilities?.[0] ?? 'Not available')}</span></p><p><strong>Evidence classification</strong><span>${escapeHtml(safeEntry.classification ?? 'Not available')}</span></p><p><strong>Source controls</strong><span>${escapeHtml(restrictionSummary(safeEntry.restrictions))}</span></p><p class="summary-wide"><strong>Limitation retained</strong><span>${escapeHtml(displayLimitation(safeEntry.limitation ?? 'Not available'))}</span></p></div>`;
   const content = {
-    initial: `<h3>Prepared Achievement</h3><p>Review the achievement, then choose Use This Achievement.</p>${detailGrid}`,
-    selected: `<h3>Prepared Achievement</h3><p>Review the achievement, then choose Use This Achievement.</p>${detailGrid}`,
+    initial: '<h3>AI-enabled Capture Workflow Pilot</h3><ul class="recommendation-summary"><li>Six-month AI-enabled capture workflow pilot</li><li>Cross-functional leadership</li><li>Approved transition plan</li><li>Supports AI pilot leadership</li><li>Limitation retained</li></ul><p class="recommendation-rationale"><strong>Why CareerOS recommended this:</strong> This achievement strengthens AI pilot leadership and technology-transition evidence for the selected role while preserving the limitations that remain unsupported.</p>',
+    selected: '<h3>AI-enabled Capture Workflow Pilot</h3><ul class="recommendation-summary"><li>Six-month AI-enabled capture workflow pilot</li><li>Cross-functional leadership</li><li>Approved transition plan</li><li>Supports AI pilot leadership</li><li>Limitation retained</li></ul><p class="recommendation-rationale"><strong>Why CareerOS recommended this:</strong> This achievement strengthens AI pilot leadership and technology-transition evidence for the selected role while preserving the limitations that remain unsupported.</p>',
     loaded: `<h3>Achievement Loaded</h3><p>Review the evidence summary, then validate the record.</p>${detailGrid}`,
     validated: `<h3>Evidence Validated</h3><p>CareerOS confirmed the approval status, evidence lineage, source restrictions, classification, and retained limitation. The record is ready to be added to Active Career DNA.</p>${detailGrid}<ul class="validation-checklist"><li>Approval status confirmed</li><li>Evidence lineage preserved</li><li>Public-use restrictions confirmed</li><li>Classification confirmed</li><li>Limitation retained</li></ul>`,
     updated: `<h3>Career DNA Updated</h3><p>The approved achievement is now part of Active Career DNA. CareerOS recalculated readiness, role fit, Career Horizon, trajectory, and the next evidence recommendation.</p>${detailGrid}${growth ? updateSummary(growth, safeEntry) : ''}`,
@@ -139,7 +141,7 @@ function renderAnalysis(result, title = 'Baseline readiness') {
     return;
   }
   analysis.replaceChildren();
-  analysis.insertAdjacentHTML('beforeend', `<section class="status"><h2>${escapeHtml(title)}</h2><p><strong>${result.confidence}%</strong> deterministic evidence confidence | ${escapeHtml(fitLabel(result))}</p><p class="footnote">${escapeHtml(result.deterministic_method)}</p></section>`);
+  analysis.insertAdjacentHTML('beforeend', `<section id="current-readiness-result" class="status" tabindex="-1"><h2>${escapeHtml(title)}</h2><p><strong>${result.confidence}%</strong> deterministic evidence confidence | ${escapeHtml(fitLabel(result))}</p><p class="footnote">${escapeHtml(result.deterministic_method)}</p></section>`);
   for (const [classification, requirements] of Object.entries(result.groups)) {
     const section = document.createElement('section');
     section.className = `analysis-group ${classification}`;
@@ -173,10 +175,13 @@ function renderGrowth(growth) {
   renderAnalysis(growth.active, `Active readiness | ${growth.active_record_count} Career DNA records`);
   const changed = growth.comparison.materially_changed;
   const unchangedCaution = growth.comparison.unchanged.find((change) => change.after_classification === 'caution');
-  comparison.innerHTML = `<section class="status"><h2>What Changed</h2><p class="change-principle"><strong>CareerOS strengthened what the evidence supports and preserved what it does not.</strong></p><div class="career-dna-update-summary"><p><strong>Career DNA records</strong><span>18 baseline records → 18 baseline + 1 active</span></p><p><strong>Active session records</strong><span>0 active records → 1 active record</span></p><p><strong>AI pilot leadership</strong><span>Adjacent → Direct</span></p><p><strong>Readiness</strong><span>78% → 82%</span></p></div><div class="comparison-grid">${changed.map((change) => `<article class="change-card"><strong>${escapeHtml(change.requirement)}</strong><p class="before-after"><span>${escapeHtml(change.before_classification)} ${change.before_confidence}%</span><span aria-hidden="true">→</span><span>${escapeHtml(change.after_classification)} ${change.after_confidence}%</span></p><p>${escapeHtml(change.reason)}</p><small>Retained limitation: ${escapeHtml(change.limitation)}</small></article>`).join('')}</div>${unchangedCaution ? `<p class="footnote">Honest limitations remain. ${escapeHtml(unchangedCaution.requirement)} remains ${unchangedCaution.after_classification}. Unsupported domain gaps are not erased by adjacent evidence.</p>` : ''}<p><strong>Next action:</strong> ${escapeHtml(growth.next_action)}</p></section>`;
+  comparison.innerHTML = `<section id="what-changed" class="status"><h2>What Changed</h2><p class="change-principle"><strong>CareerOS strengthened what the evidence supports and preserved what it does not.</strong></p><div class="career-dna-update-summary"><p><strong>Approved records</strong><span>18 baseline → 18 baseline + 1 active</span></p><p><strong>Active session records</strong><span>0 → 1</span></p><p><strong>AI pilot leadership</strong><span>Adjacent → Direct</span></p><p><strong>Readiness</strong><span>78% → 82%</span></p></div><div class="comparison-grid">${changed.map((change) => `<article class="change-card"><strong>${escapeHtml(change.requirement)}</strong><p class="before-after"><span>${escapeHtml(change.before_classification)} ${change.before_confidence}%</span><span aria-hidden="true">→</span><span>${escapeHtml(change.after_classification)} ${change.after_confidence}%</span></p><p>${escapeHtml(change.reason)}</p><small>Retained limitation: ${escapeHtml(change.limitation)}</small></article>`).join('')}</div>${unchangedCaution ? `<p class="footnote">Honest limitations remain. ${escapeHtml(unchangedCaution.requirement)} remains ${unchangedCaution.after_classification}. Unsupported domain gaps are not erased by adjacent evidence.</p>` : ''}<p><strong>Next action:</strong> ${escapeHtml(growth.next_action)}</p><button id="explore-updated-intelligence" type="button">Explore Updated Career Intelligence</button></section>`;
   timeline.innerHTML = `<h2>Career Timeline</h2>${growth.timeline.map((entry) => `<article class="record"><strong>${escapeHtml(entry.title)}</strong><p>${entry.capabilities_added.map(escapeHtml).join(' | ')}</p><small>${escapeHtml(entry.achievement_date)} | ${escapeHtml(entry.evidence_status)} | ${escapeHtml(entry.visibility)} | ${escapeHtml(entry.approval_status)} | ${escapeHtml(entry.related_role)} | readiness ${entry.readiness_changed ? 'changed' : 'unchanged'}</small></article>`).join('')}`;
   renderNextAction(growth.next_action, growth.active);
   futureValue.innerHTML = `<h2>Future Value of Recent Evidence</h2><p><strong>Capability strengthened:</strong> Technology-transition planning and AI-enabled operations.</p><p><strong>Selected-role impact:</strong> ${growth.active.confidence}% active readiness for the selected role.</p><p><strong>Adjacent-role relevance:</strong> May be reused where AI workflow modernization or technology transition is relevant.</p><p><strong>Remaining limitation:</strong> It does not establish direct space, autonomy, or quantum ownership.</p><p><strong>Recommended follow-on evidence:</strong> ${escapeHtml(growth.next_action_detail?.evidence_to_capture ?? 'Direct ownership, customer context, and quantified operational outcome.')}</p>`;
+  updatedCareerIntelligence.hidden = false;
+  updatedCareerIntelligence.innerHTML = `<h2>Updated Career Intelligence</h2><p><strong>Updated readiness:</strong> ${growth.active.confidence}% for ${escapeHtml(selectedRoleTitle())}</p><p><strong>Updated Career Horizon:</strong> Approved AI pilot and technology-transition evidence now strengthens this direction.</p><p><strong>New active evidence record:</strong> ${escapeHtml(growth.timeline?.[0]?.title ?? 'AI-enabled Capture Workflow Pilot')}</p><p><strong>New timeline record:</strong> ${escapeHtml(growth.timeline?.[0]?.achievement_date ?? 'Current session')} — added once</p><p><strong>Next recommended action:</strong> ${escapeHtml(growth.next_action)}</p>`;
+  document.querySelector('#explore-updated-intelligence').onclick = exploreUpdatedCareerIntelligence;
 }
 
 async function loadRoleAnalysis() {
@@ -225,10 +230,13 @@ async function validateDraft() {
       transitionAchievement(demoState, 'validated');
       validateAchievementButton.textContent = 'Validated';
       validateAchievementButton.disabled = true;
+      validateAchievementButton.hidden = true;
       addAchievementButton.disabled = false;
+      addAchievementButton.hidden = false;
+      workflowStatus.innerHTML = '<span class="completion-badge">✓ Achievement loaded</span><span class="completion-badge">✓ Evidence validated</span>';
       renderAchievementStatus('validated', entry);
       flashAchievementStatus();
-      if (demoState.guided_active) { transitionGuidedStep(7); renderGuided(); }
+      if (demoState.guided_active && updateGuidedStep(demoState, 7)) renderGuided();
     } else {
       achievementStatus.innerHTML = `<h3>Validation Failed</h3><p>${escapeHtml(result.body.validations?.[0]?.errors?.join(', ') ?? result.body.error ?? 'Unknown validation error.')}</p>`;
     }
@@ -241,11 +249,15 @@ function resetEvidenceWorkbench() {
   demoAchievementSelector.selectedIndex = 0;
   document.querySelector('.technical-evidence-record').open = false;
   loadAchievementButton.disabled = false;
+  loadAchievementButton.hidden = false;
   loadAchievementButton.textContent = 'Use This Achievement';
   validateAchievementButton.textContent = 'Validate Evidence';
   addAchievementButton.textContent = 'Add to Career DNA';
   validateAchievementButton.disabled = true;
+  validateAchievementButton.hidden = true;
   addAchievementButton.disabled = true;
+  addAchievementButton.hidden = true;
+  workflowStatus.replaceChildren();
   renderAchievementStatus('selected');
 }
 
@@ -253,6 +265,8 @@ async function resetGuidedDemo({ keepPanel = false } = {}) {
   demoState = resetDemoState();
   roleSelector.value = demoState.selected_role_id;
   comparison.replaceChildren();
+  updatedCareerIntelligence.hidden = true;
+  updatedCareerIntelligence.replaceChildren();
   timeline.innerHTML = '<h2>Career Timeline</h2><p class="footnote">Session reset restored baseline analysis. Approved baseline evidence remains read-only.</p>';
   resetEvidenceWorkbench();
   renderSummary(); futureValue.innerHTML = '<h2>Future Value of Recent Evidence</h2><p class="footnote">No session evidence is active. Add a validated achievement to see future value without changing the approved baseline.</p>'; await loadRoleAnalysis(); await loadForwardIntelligence();
@@ -265,9 +279,13 @@ demoAchievementSelector.onchange = () => {
   validateAchievementButton.disabled = true;
   addAchievementButton.disabled = true;
   loadAchievementButton.disabled = false;
+  loadAchievementButton.hidden = false;
   loadAchievementButton.textContent = 'Use This Achievement';
   validateAchievementButton.textContent = 'Validate Evidence';
+  validateAchievementButton.hidden = true;
   addAchievementButton.textContent = 'Add to Career DNA';
+  addAchievementButton.hidden = true;
+  workflowStatus.replaceChildren();
   renderAchievementStatus('selected');
 };
 
@@ -277,14 +295,18 @@ function loadDemoAchievement() {
   if (!entry) return false;
   input.value = JSON.stringify(entry, null, 2);
   validateAchievementButton.disabled = false;
+  validateAchievementButton.hidden = false;
   addAchievementButton.disabled = true;
+  addAchievementButton.hidden = true;
   loadAchievementButton.textContent = 'Achievement Loaded';
   loadAchievementButton.disabled = true;
+  loadAchievementButton.hidden = true;
+  workflowStatus.innerHTML = '<span class="completion-badge">✓ Achievement loaded</span>';
   validateAchievementButton.textContent = 'Validate Evidence';
   addAchievementButton.textContent = 'Add to Career DNA';
   renderAchievementStatus('loaded', entry);
   flashAchievementStatus();
-  if (demoState.guided_active) { transitionGuidedStep(6); renderGuided(); }
+  if (demoState.guided_active && updateGuidedStep(demoState, 6)) renderGuided();
   // Regression compatibility: Synthetic Build Week Demonstration loaded. It is not a historical accomplishment.
   return true;
 }
@@ -300,17 +322,33 @@ async function addDemoAchievementToCareerDNA() {
   demoState.active_session_records.push(entry);
   renderGrowth(growth.body);
   addAchievementButton.disabled = true;
+  addAchievementButton.hidden = true;
   addAchievementButton.textContent = 'Added to Career DNA';
   renderAchievementStatus('updated', entry, growth.body);
   flashCareerDnaUpdate();
-  transitionGuidedStep(8);
-  window.setTimeout(() => { revealGuidedSection('#comparison'); renderGuided(); }, 400);
+  if (demoState.guided_active && updateGuidedStep(demoState, 8)) renderGuided();
   return true;
 }
-document.querySelector('#add-achievement').onclick = addDemoAchievementToCareerDNA;
+document.querySelector('#add-to-career-dna-action').onclick = addDemoAchievementToCareerDNA;
+function exploreUpdatedCareerIntelligence() {
+  if (demoState.achievement_state !== 'added') return false;
+  if (demoState.guided_active && updateGuidedStep(demoState, 9)) renderGuided();
+  return true;
+}
 document.querySelector('#reset-session').onclick = resetGuidedDemo;
-async function selectDemoRole() { demoState.selected_role_id = roleSelector.value; }
-async function analyzeSelectedRole() { await selectDemoRole(); await loadRoleAnalysis(); await loadForwardIntelligence(); if (demoState.guided_active) transitionGuidedStep(3); }
+function selectDemoRole() { demoState.selected_role_id = roleSelector.value; }
+async function analyzeSelectedRole() {
+  const roleId = roleSelector.value;
+  if (!roleId) return false;
+  demoState.selected_role_id = roleId;
+  await loadRoleAnalysis();
+  await loadForwardIntelligence();
+  if (demoState.guided_active && updateGuidedStep(demoState, 3)) renderGuided();
+  window.setTimeout(() => {
+    document.querySelector('#current-readiness-result')?.focus({ preventScroll: true });
+  }, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 400);
+  return true;
+}
 roleSelector.onchange = selectDemoRole;
 document.querySelector('#close-drawer').onclick = () => drawer.close();
 
@@ -328,10 +366,13 @@ function revealGuidedSection(selector) {
     if (!panel) return;
     const target = section.getBoundingClientRect();
     const panelWidth = panel.getBoundingClientRect().width;
-    const gap = 20;
+    const gutter = 16;
+    const rightDockLeft = window.innerWidth - panelWidth - gutter;
+    const targetIntersectsRightDock = target.right > rightDockLeft && target.left < window.innerWidth - gutter;
     panel.style.top = `${Math.max(16, Math.min(target.top, window.innerHeight - panel.offsetHeight - 16))}px`;
-    panel.style.left = target.right + panelWidth + gap < window.innerWidth ? `${target.right + gap}px` : `${Math.max(16, target.left - panelWidth - gap)}px`;
-  }, reduceMotion ? 0 : 350);
+    panel.style.right = targetIntersectsRightDock ? 'auto' : `${gutter}px`;
+    panel.style.left = targetIntersectsRightDock ? `${gutter}px` : 'auto';
+  }, reduceMotion ? 0 : 700);
 }
 
 function renderGuided() {
@@ -343,10 +384,14 @@ function renderGuided() {
   document.querySelector('#guided-copy').innerHTML = escapeHtml(copy).replace(/\n\n/g, '<br><br>');
   document.querySelector('#guided-back').disabled = demoState.guided_step === 1;
   const next = document.querySelector('#guided-next');
-  const actionSteps = [2, 5, 6, 7];
-  next.hidden = actionSteps.includes(demoState.guided_step);
+  const actionRequired = (demoState.guided_step === 2)
+    || (demoState.guided_step === 5 && demoState.achievement_state === 'prepared')
+    || (demoState.guided_step === 6 && demoState.achievement_state === 'loaded')
+    || (demoState.guided_step === 7 && demoState.achievement_state === 'validated')
+    || demoState.guided_step === 8;
+  next.hidden = actionRequired;
   next.textContent = demoState.guided_step === 9 ? 'Finish' : 'Continue';
-  const targets = ['#career-dna-summary', '#role-readiness-card', '#analysis', '#career-horizon', '#achievement-status', '#achievement-status', '#add-achievement', '#comparison', '#career-horizon'];
+  const targets = ['#career-dna-summary article', '#target-role-readiness', '#current-readiness-result', '#career-horizon h2', '#recommended-evidence-section', '#loaded-evidence-summary', '#add-to-career-dna-action', '#what-changed', '#updated-career-intelligence'];
   if (demoState.guided_step === 9) {
     const careerDnaDetails = document.querySelector('#career-dna-details');
     if (careerDnaDetails) careerDnaDetails.open = false;
@@ -357,6 +402,7 @@ function renderGuided() {
 async function startGuidedDemo() {
   await resetGuidedDemo({ keepPanel: true });
   demoState.guided_active = true;
+  document.body.classList.add('guided-demo-running');
   document.querySelector('#guided-panel').classList.add('guided-active');
   renderGuided();
 }
@@ -365,10 +411,11 @@ function endGuidedDemo() {
   const panel = document.querySelector('#guided-panel');
   panel.hidden = true;
   panel.classList.remove('guided-active');
+  document.body.classList.remove('guided-demo-running');
 }
 
 document.querySelector('#start-guided').onclick = startGuidedDemo;
-document.querySelector('#analyze-role').onclick = async () => { await analyzeSelectedRole(); renderGuided(); };
+document.querySelector('#analyze-role').onclick = analyzeSelectedRole;
 document.querySelector('#guided-next').onclick = () => { if (demoState.guided_step < 9 && updateGuidedStep(demoState, demoState.guided_step + 1)) renderGuided(); else if (demoState.guided_step === 9) endGuidedDemo(); };
 document.querySelector('#guided-back').onclick = () => { if (updateGuidedStep(demoState, demoState.guided_step - 1)) renderGuided(); };
 document.querySelector('#guided-exit').onclick = endGuidedDemo;

@@ -170,7 +170,7 @@
         <p class="footnote">Loading evidence-supported direction.</p>
       </section>
 
-      <section id="role-readiness-card" class="status">
+      <section id="target-role-readiness" class="status">
         <h2>Target-role readiness</h2>
         <p id="data-status">Loading approved Career DNA.</p>
         <label for="role-selector">Target role</label>
@@ -194,26 +194,28 @@
           </section>
 
           <section class="status growth-panel">
-            <h2>Build New Career Evidence</h2>
-            <p>Choose one approved demonstration achievement, validate its source and limitations, and decide whether to add it to Active Career DNA.</p>
-            <label for="demo-achievement-selector">Choose a Demonstration Achievement</label>
-            <select id="demo-achievement-selector" aria-label="Choose a demonstration achievement" disabled>
-              <option>Loading prepared demonstration achievement…</option>
-            </select>
+            <section id="recommended-evidence-section">
+              <h2>Recommended Evidence to Strengthen This Role</h2>
+              <p>CareerOS selected this approved achievement because it most directly strengthens the evidence gap identified for the selected role.</p>
+              <label for="demo-achievement-selector">Choose a Demonstration Achievement</label>
+              <select id="demo-achievement-selector" aria-label="Choose a demonstration achievement" disabled>
+                <option>Loading prepared demonstration achievement…</option>
+              </select>
 
-            <section class="achievement-summary-card" aria-live="polite">
-              <div id="achievement-status">
-                <h3>Prepared Achievement</h3>
-                <p>Loading the approved demonstration achievement…</p>
-              </div>
+              <section id="loaded-evidence-summary" class="achievement-summary-card" aria-live="polite">
+                <div id="achievement-status">
+                  <h3>AI-enabled Capture Workflow Pilot</h3>
+                  <p>Loading the approved demonstration achievement…</p>
+                </div>
+                <div id="workflow-status" class="workflow-status" aria-live="polite"></div>
+                <div class="dataset-switch">
+                  <button id="load-fixture" type="button">Use This Achievement</button>
+                  <button id="validate-achievement" type="button" hidden disabled>Validate Evidence</button>
+                  <button id="add-to-career-dna-action" type="button" hidden disabled>Add to Career DNA</button>
+                </div>
+              </section>
             </section>
-
-            <div class="dataset-switch">
-              <button id="load-fixture" type="button">Use This Achievement</button>
-              <button id="validate-achievement" type="button" disabled>Validate Evidence</button>
-              <button id="add-achievement" type="button" disabled>Add to Career DNA</button>
-              <button id="reset-session" type="button">Reset Session</button>
-            </div>
+            <div class="secondary-workflow-action"><button id="reset-session" type="button">Reset Session</button></div>
 
             <details class="technical-evidence-record">
               <summary>View Technical Evidence Record</summary>
@@ -228,6 +230,8 @@
             <h2>Career Timeline</h2>
             <p class="footnote">No session evidence added. Approved baseline evidence remains read-only.</p>
           </section>
+
+          <section id="updated-career-intelligence" class="status" aria-live="polite" hidden></section>
         </div>
       </details>
 
