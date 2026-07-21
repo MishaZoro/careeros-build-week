@@ -6,7 +6,7 @@ export const aiWorkflowPilotFixture = {
   capabilities: ['AI pilot leadership', 'cross-functional execution', 'workflow discovery', 'operational testing', 'transition planning', 'AI-enabled operations', 'capture automation'],
   organizations: ['Federal technology company'], customers_or_agencies: ['Federal market'], evidence_source_label: 'Synthetic Build Week achievement fixture',
   related_role_requirements: ['AI and cybersecurity positioning', 'Technology-transition planning', 'Federal growth leadership', 'Executive communication'], related_role_id: 'ROLE-003',
-  confidence: 86, visibility: 'public_demo', approval_status: 'approved', approved_by: 'Synthetic Build Week Fixture', approved_at: '2026-07-18T20:01:39-04:00',
+  confidence: 96, visibility: 'public_demo', approval_status: 'approved', approved_by: 'Synthetic Build Week Fixture', approved_at: '2026-07-18T20:01:39-04:00',
   restrictions: { public_summary_only: true, no_contact_details: true, no_private_details: true },
   limitation: 'The fixture demonstrates leadership of an AI-enabled operational pilot. It does not establish direct ownership of a production AI platform, autonomy program, quantum program, or space system.',
   classification: 'direct', created_at: '2026-07-18T20:01:39-04:00', synthetic_fixture: true

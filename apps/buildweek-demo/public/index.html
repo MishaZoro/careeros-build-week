@@ -139,7 +139,7 @@
       <p id="guided-copy"></p>
       <div class="dataset-switch">
         <button id="guided-back" type="button">Back</button>
-        <button id="guided-next" type="button">Next</button>
+        <button id="guided-next" type="button">Continue</button>
         <button id="guided-exit" type="button">Exit Guided Demo</button>
       </div>
     </section>
@@ -175,6 +175,7 @@
         <p id="data-status">Loading approved Career DNA.</p>
         <label for="role-selector">Target role</label>
         <select id="role-selector" aria-label="Select target role"></select>
+        <button id="analyze-role" type="button">Analyze This Direction</button>
       </section>
 
       <details id="role-analysis-details" class="command-center-details">
@@ -202,14 +203,14 @@
 
             <section class="achievement-summary-card" aria-live="polite">
               <div id="achievement-status">
-                <h3>Demonstration Achievement</h3>
-                <p>No demonstration achievement is loaded.</p>
+                <h3>Prepared Achievement</h3>
+                <p>Loading the approved demonstration achievement…</p>
               </div>
             </section>
 
             <div class="dataset-switch">
               <button id="load-fixture" type="button">Use This Achievement</button>
-              <button id="validate-achievement" type="button" disabled>Validate</button>
+              <button id="validate-achievement" type="button" disabled>Validate Evidence</button>
               <button id="add-achievement" type="button" disabled>Add to Career DNA</button>
               <button id="reset-session" type="button">Reset Session</button>
             </div>

@@ -38,6 +38,12 @@ export function createAppServer() {
   return createServer(async (request, response) => {
     const url = new URL(request.url ?? '/', 'http://127.0.0.1');
 
+    if (url.pathname === '/demo-state.mjs') {
+      response.writeHead(200, { 'content-type': 'text/javascript; charset=utf-8' });
+      response.end(await readFile(join(appRoot, 'lib', 'demo-state.mjs'), 'utf8'));
+      return;
+    }
+
     if (url.pathname === '/health') {
       response.writeHead(200, { 'content-type': 'application/json; charset=utf-8' });
       response.end(JSON.stringify({ status: 'ok', mode: 'careeros-buildweek-final', data: 'local_only' }));

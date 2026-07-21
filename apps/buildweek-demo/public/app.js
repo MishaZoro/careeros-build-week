@@ -1,3 +1,5 @@
+import { createDemoState, resetDemoState, transitionAchievement, transitionGuidedStep as updateGuidedStep } from '/demo-state.mjs';
+
 const status = document.querySelector('#data-status');
 const roleSelector = document.querySelector('#role-selector');
 const analysis = document.querySelector('#analysis');
@@ -17,21 +19,16 @@ const horizonPanel = document.querySelector('#career-horizon');
 const futureValue = document.querySelector('#future-value');
 let roles = [];
 let baselineEvidence = [];
-let sessionEntries = [];
-let lastGrowth;
-let guidedStep = 0;
+let demoState = createDemoState();
 let demonstrationRecords = [];
-let validatedDemonstrationEntryId;
 
 const guidedSteps = [
   ['Career DNA', 'CareerOS begins with governed evidence, not resume keywords. It preserves past work and the foundation for what may come next.'],
   ['Choose a Career Direction', 'Select one prepared role to see what your approved Career DNA supports today. You can change the role at any time, and CareerOS will recalculate readiness, evidence fit, limitations, Career Horizon, and trajectory.'],
-  ['Current Readiness', () => `CareerOS compares ${selectedRoleTitle()} with approved Career DNA and separates direct strength, adjacent potential, transferable capability, caution, and unsupported gaps.`],
-  ['Career Horizon', 'CareerOS identifies an evidence-supported direction, a persistent limitation, and the next evidence worth intentionally building for the selected role.'],
-  ['Build New Career Evidence', 'CareerOS does not invent strengths. It evaluates a new achievement, explains what it supports, preserves what it does not support, and shows how the record changes Career DNA.\n\nThe next step lets you choose one approved demonstration achievement so you can see the transformation happen.'],
-  ['Use the Prepared Achievement', 'Use the prepared achievement to see how CareerOS evaluates approved evidence, preserves its limitations, and determines whether it should strengthen Active Career DNA.'],
-  ['Review the Demonstration Achievement', 'CareerOS presents the achievement in a human-readable evidence summary before showing its technical record. Review what the achievement supports, its source controls, its classification, and the limitation that remains.'],
-  ['Validate Evidence', 'Validation confirms that the record is approved, traceable, correctly classified, subject to its source restrictions, and honest about what it does not establish.'],
+  ['Review Current Readiness', () => `CareerOS compares ${selectedRoleTitle()} with approved Career DNA and separates direct strength, adjacent potential, transferable capability, caution, and unsupported gaps.`],
+  ['Explore Career Horizon', 'CareerOS identifies an evidence-supported direction, a persistent limitation, and the next evidence worth intentionally building for the selected role.'],
+  ['Select New Career Evidence', 'Use the prepared achievement to see how CareerOS evaluates approved evidence while preserving its limitations.'],
+  ['Review and Validate Evidence', 'Review the full evidence summary, source controls, classification, and retained limitation, then validate it.'],
   ['Add to Career DNA', 'Once validated, the approved achievement can become part of Active Career DNA. CareerOS then recalculates readiness, role fit, Career Horizon, trajectory, and the next evidence recommendation.'],
   ['See What Changed', 'CareerOS changes only the conclusions supported by the new evidence. It strengthens the relevant capability while preserving limitations and unsupported domain gaps.'],
   ['Explore Updated Career Intelligence', 'The new evidence is now part of Active Career DNA. Explore the updated Career Horizon, readiness, trajectory, timeline, and approved evidence record.']
@@ -40,7 +37,7 @@ const guidedSteps = [
 const escapeHtml = (value) => String(value ?? '').replace(/[&<>'"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[character]));
 
 function selectedRoleTitle() {
-  return roles.find((role) => role.id === roleSelector.value)?.title ?? 'the selected role';
+  return roles.find((role) => role.id === demoState.selected_role_id)?.title ?? 'the selected role';
 }
 
 function selectedDemonstrationRecord() {
@@ -67,7 +64,7 @@ function renderAchievementStatus(state = 'initial', entry = selectedDemonstratio
   const title = escapeHtml(safeEntry.title ?? 'Demonstration Achievement');
   const detailGrid = `<div class="achievement-summary-grid"><p><strong>Achievement</strong><span>${title}</span></p><p><strong>Description</strong><span>${escapeHtml(safeEntry.summary)}</span></p><p><strong>Status</strong><span>Approved demonstration record</span></p><p><strong>Capability strengthened</strong><span>${escapeHtml(safeEntry.capabilities?.[0] ?? 'Not available')}</span></p><p><strong>Evidence classification</strong><span>${escapeHtml(safeEntry.classification ?? 'Not available')}</span></p><p><strong>Source controls</strong><span>${escapeHtml(restrictionSummary(safeEntry.restrictions))}</span></p><p class="summary-wide"><strong>Limitation retained</strong><span>${escapeHtml(displayLimitation(safeEntry.limitation ?? 'Not available'))}</span></p></div>`;
   const content = {
-    initial: '<h3>Demonstration Achievement</h3><p>No demonstration achievement is loaded.</p>',
+    initial: `<h3>Prepared Achievement</h3><p>Review the achievement, then choose Use This Achievement.</p>${detailGrid}`,
     selected: `<h3>Prepared Achievement</h3><p>Review the achievement, then choose Use This Achievement.</p>${detailGrid}`,
     loaded: `<h3>Achievement Loaded</h3><p>Review the evidence summary, then validate the record.</p>${detailGrid}`,
     validated: `<h3>Evidence Validated</h3><p>CareerOS confirmed the approval status, evidence lineage, source restrictions, classification, and retained limitation. The record is ready to be added to Active Career DNA.</p>${detailGrid}<ul class="validation-checklist"><li>Approval status confirmed</li><li>Evidence lineage preserved</li><li>Public-use restrictions confirmed</li><li>Classification confirmed</li><li>Limitation retained</li></ul>`,
@@ -111,7 +108,7 @@ function renderSummary() {
   baselineEvidence.forEach((record) => record.capabilities.forEach((capability) => capabilityCounts.set(capability, (capabilityCounts.get(capability) ?? 0) + 1)));
   const strongest = [...capabilityCounts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 3).map(([capability]) => capability).join(', ');
   const sourceCount = new Set(baselineEvidence.map((record) => record.source_type)).size;
-  summary.innerHTML = `<article><strong>${baselineEvidence.length}</strong><span>approved baseline records</span></article><article><strong>${sessionEntries.length}</strong><span>active session records</span></article><article><strong>${counts.map(([name, count]) => `${count} ${name}`).join(' | ')}</strong><span>evidence classifications</span></article><article><strong>${sourceCount}</strong><span>public-safe source categories</span></article><article class="summary-wide"><strong>Most-supported capabilities</strong><span>${escapeHtml(strongest || 'Loading capability evidence.')}</span></article>`;
+  summary.innerHTML = `<article><strong>${baselineEvidence.length}</strong><span>approved baseline records</span></article><article><strong>${demoState.active_session_records.length}</strong><span>active session records</span></article><article><strong>${counts.map(([name, count]) => `${count} ${name}`).join(' | ')}</strong><span>evidence classifications</span></article><article><strong>${sourceCount}</strong><span>public-safe source categories</span></article><article class="summary-wide"><strong>Most-supported capabilities</strong><span>${escapeHtml(strongest || 'Loading capability evidence.')}</span></article>`;
 }
 
 function renderNextAction(text, result) {
@@ -125,7 +122,7 @@ function renderHorizon(data) {
 }
 
 async function loadForwardIntelligence() {
-  const response = await fetch(`/forward-intelligence.json?role=${encodeURIComponent(roleSelector.value || 'ROLE-003')}`);
+  const response = await fetch(`/forward-intelligence.json?role=${encodeURIComponent(demoState.selected_role_id)}`);
   if (!response.ok) throw new Error('Career Horizon is unavailable.');
   renderHorizon(await response.json());
 }
@@ -161,27 +158,30 @@ function renderAnalysis(result, title = 'Baseline readiness') {
 }
 
 async function requestGrowth(entries) {
-  const response = await fetch('/growth-loop.json', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ role_id: roleSelector.value, entries }) });
+  const response = await fetch('/growth-loop.json', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ role_id: demoState.selected_role_id, entries }) });
   let body;
   try { body = await response.json(); } catch { body = { error: 'The local server returned an unreadable response.' }; }
   return { ok: response.ok, body };
 }
 
 function renderGrowth(growth) {
-  lastGrowth = growth;
+  demoState.last_growth = growth;
+  demoState.updated_readiness = growth.active.confidence;
+  demoState.capability.after = 'Direct';
+  demoState.timeline_entry = growth.timeline?.[0] ?? null;
   renderSummary();
   renderAnalysis(growth.active, `Active readiness | ${growth.active_record_count} Career DNA records`);
   const changed = growth.comparison.materially_changed;
   const unchangedCaution = growth.comparison.unchanged.find((change) => change.after_classification === 'caution');
-  comparison.innerHTML = `<section class="status"><h2>What Changed</h2><p>CareerOS changed only the conclusions supported by the new evidence.</p><div class="comparison-grid">${changed.map((change) => `<article class="change-card"><strong>${escapeHtml(change.requirement)}</strong><p class="before-after"><span>${escapeHtml(change.before_classification)} ${change.before_confidence}%</span><span aria-hidden="true">→</span><span>${escapeHtml(change.after_classification)} ${change.after_confidence}%</span></p><p>${escapeHtml(change.reason)}</p><small>Retained limitation: ${escapeHtml(change.limitation)}</small></article>`).join('')}</div>${unchangedCaution ? `<p class="footnote">Honest limitations remain. ${escapeHtml(unchangedCaution.requirement)} remains ${unchangedCaution.after_classification}. Unsupported domain gaps are not erased by adjacent evidence.</p>` : ''}<p><strong>Next action:</strong> ${escapeHtml(growth.next_action)}</p></section>`;
+  comparison.innerHTML = `<section class="status"><h2>What Changed</h2><p class="change-principle"><strong>CareerOS strengthened what the evidence supports and preserved what it does not.</strong></p><div class="career-dna-update-summary"><p><strong>Career DNA records</strong><span>18 baseline records → 18 baseline + 1 active</span></p><p><strong>Active session records</strong><span>0 active records → 1 active record</span></p><p><strong>AI pilot leadership</strong><span>Adjacent → Direct</span></p><p><strong>Readiness</strong><span>78% → 82%</span></p></div><div class="comparison-grid">${changed.map((change) => `<article class="change-card"><strong>${escapeHtml(change.requirement)}</strong><p class="before-after"><span>${escapeHtml(change.before_classification)} ${change.before_confidence}%</span><span aria-hidden="true">→</span><span>${escapeHtml(change.after_classification)} ${change.after_confidence}%</span></p><p>${escapeHtml(change.reason)}</p><small>Retained limitation: ${escapeHtml(change.limitation)}</small></article>`).join('')}</div>${unchangedCaution ? `<p class="footnote">Honest limitations remain. ${escapeHtml(unchangedCaution.requirement)} remains ${unchangedCaution.after_classification}. Unsupported domain gaps are not erased by adjacent evidence.</p>` : ''}<p><strong>Next action:</strong> ${escapeHtml(growth.next_action)}</p></section>`;
   timeline.innerHTML = `<h2>Career Timeline</h2>${growth.timeline.map((entry) => `<article class="record"><strong>${escapeHtml(entry.title)}</strong><p>${entry.capabilities_added.map(escapeHtml).join(' | ')}</p><small>${escapeHtml(entry.achievement_date)} | ${escapeHtml(entry.evidence_status)} | ${escapeHtml(entry.visibility)} | ${escapeHtml(entry.approval_status)} | ${escapeHtml(entry.related_role)} | readiness ${entry.readiness_changed ? 'changed' : 'unchanged'}</small></article>`).join('')}`;
   renderNextAction(growth.next_action, growth.active);
   futureValue.innerHTML = `<h2>Future Value of Recent Evidence</h2><p><strong>Capability strengthened:</strong> Technology-transition planning and AI-enabled operations.</p><p><strong>Selected-role impact:</strong> ${growth.active.confidence}% active readiness for the selected role.</p><p><strong>Adjacent-role relevance:</strong> May be reused where AI workflow modernization or technology transition is relevant.</p><p><strong>Remaining limitation:</strong> It does not establish direct space, autonomy, or quantum ownership.</p><p><strong>Recommended follow-on evidence:</strong> ${escapeHtml(growth.next_action_detail?.evidence_to_capture ?? 'Direct ownership, customer context, and quantified operational outcome.')}</p>`;
 }
 
 async function loadRoleAnalysis() {
-  if (!roleSelector.value) { renderAnalysis(); return; }
-  const response = await fetch(`/analysis.json?role=${encodeURIComponent(roleSelector.value)}`);
+  if (!demoState.selected_role_id) { renderAnalysis(); return; }
+  const response = await fetch(`/analysis.json?role=${encodeURIComponent(demoState.selected_role_id)}`);
   if (!response.ok) throw new Error('Analysis is unavailable for the selected role.');
   const result = await response.json();
   renderAnalysis(result);
@@ -217,16 +217,18 @@ async function loadDemonstrationRecords() {
 }
 
 async function validateDraft() {
+  if (demoState.achievement_state !== 'loaded') return { ok: false, body: { error: 'Load the prepared achievement before validation.' } };
   try {
     const entry = JSON.parse(input.value);
     const result = await requestGrowth([entry]);
     if (result.ok) {
-      validatedDemonstrationEntryId = entry.entry_id;
+      transitionAchievement(demoState, 'validated');
       validateAchievementButton.textContent = 'Validated';
       validateAchievementButton.disabled = true;
       addAchievementButton.disabled = false;
       renderAchievementStatus('validated', entry);
       flashAchievementStatus();
+      if (demoState.guided_active) { transitionGuidedStep(7); renderGuided(); }
     } else {
       achievementStatus.innerHTML = `<h3>Validation Failed</h3><p>${escapeHtml(result.body.validations?.[0]?.errors?.join(', ') ?? result.body.error ?? 'Unknown validation error.')}</p>`;
     }
@@ -235,70 +237,81 @@ async function validateDraft() {
 }
 
 function resetEvidenceWorkbench() {
-  validatedDemonstrationEntryId = undefined;
   input.value = '';
   demoAchievementSelector.selectedIndex = 0;
   document.querySelector('.technical-evidence-record').open = false;
   loadAchievementButton.disabled = false;
   loadAchievementButton.textContent = 'Use This Achievement';
-  validateAchievementButton.textContent = 'Validate';
+  validateAchievementButton.textContent = 'Validate Evidence';
   addAchievementButton.textContent = 'Add to Career DNA';
   validateAchievementButton.disabled = true;
   addAchievementButton.disabled = true;
-  renderAchievementStatus();
+  renderAchievementStatus('selected');
 }
 
-async function resetSession({ resetWorkbench = false } = {}) {
-  sessionEntries = []; lastGrowth = undefined; comparison.replaceChildren();
+async function resetGuidedDemo({ keepPanel = false } = {}) {
+  demoState = resetDemoState();
+  roleSelector.value = demoState.selected_role_id;
+  comparison.replaceChildren();
   timeline.innerHTML = '<h2>Career Timeline</h2><p class="footnote">Session reset restored baseline analysis. Approved baseline evidence remains read-only.</p>';
-  if (resetWorkbench) resetEvidenceWorkbench();
+  resetEvidenceWorkbench();
   renderSummary(); futureValue.innerHTML = '<h2>Future Value of Recent Evidence</h2><p class="footnote">No session evidence is active. Add a validated achievement to see future value without changing the approved baseline.</p>'; await loadRoleAnalysis(); await loadForwardIntelligence();
+  if (!keepPanel) endGuidedDemo();
 }
 
 demoAchievementSelector.onchange = () => {
-  validatedDemonstrationEntryId = undefined;
+  demoState.achievement_state = 'prepared';
   input.value = '';
   validateAchievementButton.disabled = true;
   addAchievementButton.disabled = true;
   loadAchievementButton.disabled = false;
   loadAchievementButton.textContent = 'Use This Achievement';
-  validateAchievementButton.textContent = 'Validate';
+  validateAchievementButton.textContent = 'Validate Evidence';
   addAchievementButton.textContent = 'Add to Career DNA';
   renderAchievementStatus('selected');
 };
 
-document.querySelector('#load-fixture').onclick = () => {
+function loadDemoAchievement() {
+  if (!transitionAchievement(demoState, 'loaded')) return false;
   const entry = selectedDemonstrationRecord();
-  if (!entry) return;
+  if (!entry) return false;
   input.value = JSON.stringify(entry, null, 2);
-  validatedDemonstrationEntryId = undefined;
   validateAchievementButton.disabled = false;
   addAchievementButton.disabled = true;
   loadAchievementButton.textContent = 'Achievement Loaded';
   loadAchievementButton.disabled = true;
-  validateAchievementButton.textContent = 'Validate';
+  validateAchievementButton.textContent = 'Validate Evidence';
   addAchievementButton.textContent = 'Add to Career DNA';
   renderAchievementStatus('loaded', entry);
   flashAchievementStatus();
+  if (demoState.guided_active) { transitionGuidedStep(6); renderGuided(); }
   // Regression compatibility: Synthetic Build Week Demonstration loaded. It is not a historical accomplishment.
-};
+  return true;
+}
+document.querySelector('#load-fixture').onclick = loadDemoAchievement;
 document.querySelector('#validate-achievement').onclick = validateDraft;
-document.querySelector('#add-achievement').onclick = async () => {
-  if (!validatedDemonstrationEntryId) return;
+async function addDemoAchievementToCareerDNA() {
+  if (demoState.achievement_state !== 'validated' || demoState.added) return false;
   const entry = JSON.parse(input.value);
-  if (sessionEntries.some((item) => item.entry_id === entry.entry_id)) { renderAchievementStatus('duplicate'); return; }
-  sessionEntries.push(entry);
-  const growth = await requestGrowth(sessionEntries);
-  if (!growth.ok) { sessionEntries.pop(); achievementStatus.innerHTML = `<h3>Career DNA Update Failed</h3><p>${escapeHtml(growth.body.error ?? 'Local validation failed.')}</p>`; return; }
+  if (demoState.active_session_records.some((item) => item.entry_id === entry.entry_id)) { renderAchievementStatus('duplicate'); return false; }
+  const growth = await requestGrowth([entry]);
+  if (!growth.ok) { achievementStatus.innerHTML = `<h3>Career DNA Update Failed</h3><p>${escapeHtml(growth.body.error ?? 'Local validation failed.')}</p>`; return false; }
+  if (!transitionAchievement(demoState, 'added')) return false;
+  demoState.active_session_records.push(entry);
   renderGrowth(growth.body);
   addAchievementButton.disabled = true;
   addAchievementButton.textContent = 'Added to Career DNA';
   renderAchievementStatus('updated', entry, growth.body);
   flashCareerDnaUpdate();
-  window.setTimeout(() => revealGuidedSection('#comparison'), 800);
-};
-document.querySelector('#reset-session').onclick = () => resetSession({ resetWorkbench: true });
-roleSelector.onchange = async () => { await resetSession(); };
+  transitionGuidedStep(8);
+  window.setTimeout(() => { revealGuidedSection('#comparison'); renderGuided(); }, 400);
+  return true;
+}
+document.querySelector('#add-achievement').onclick = addDemoAchievementToCareerDNA;
+document.querySelector('#reset-session').onclick = resetGuidedDemo;
+async function selectDemoRole() { demoState.selected_role_id = roleSelector.value; }
+async function analyzeSelectedRole() { await selectDemoRole(); await loadRoleAnalysis(); await loadForwardIntelligence(); if (demoState.guided_active) transitionGuidedStep(3); }
+roleSelector.onchange = selectDemoRole;
 document.querySelector('#close-drawer').onclick = () => drawer.close();
 
 function revealGuidedSection(selector) {
@@ -313,29 +326,37 @@ function revealGuidedSection(selector) {
   window.setTimeout(() => {
     const panel = document.querySelector('#guided-panel.guided-active');
     if (!panel) return;
-    window.scrollBy({ top: -(panel.getBoundingClientRect().height + 24), behavior: reduceMotion ? 'auto' : 'smooth' });
+    const target = section.getBoundingClientRect();
+    const panelWidth = panel.getBoundingClientRect().width;
+    const gap = 20;
+    panel.style.top = `${Math.max(16, Math.min(target.top, window.innerHeight - panel.offsetHeight - 16))}px`;
+    panel.style.left = target.right + panelWidth + gap < window.innerWidth ? `${target.right + gap}px` : `${Math.max(16, target.left - panelWidth - gap)}px`;
   }, reduceMotion ? 0 : 350);
 }
 
 function renderGuided() {
-  const [title, copySource] = guidedSteps[guidedStep];
+  const [title, copySource] = guidedSteps[demoState.guided_step - 1];
   const copy = typeof copySource === 'function' ? copySource() : copySource;
   document.querySelector('#guided-panel').hidden = false;
-  document.querySelector('#guided-progress').textContent = `Guided Demo | Step ${guidedStep + 1} of ${guidedSteps.length}`;
+  document.querySelector('#guided-progress').textContent = `Guided Demo | Step ${demoState.guided_step} of ${guidedSteps.length}`;
   document.querySelector('#guided-title').textContent = title;
   document.querySelector('#guided-copy').innerHTML = escapeHtml(copy).replace(/\n\n/g, '<br><br>');
-  document.querySelector('#guided-back').disabled = guidedStep === 0;
-  document.querySelector('#guided-next').textContent = guidedStep === guidedSteps.length - 1 ? 'Finish' : 'Next';
-  const targets = ['#career-dna-summary', '#role-selector', '#role-readiness-card', '#career-horizon', '#evidence-workbench-details', '#demo-achievement-selector', '#achievement-status', '#validate-achievement', '#add-achievement', '#comparison', '#career-dna-details'];
-  revealGuidedSection(targets[guidedStep]);
-  if (guidedStep === 10) document.querySelector('#guided-status').textContent = 'Guided demo complete. Explore the updated Career DNA or restart the demonstration session.';
+  document.querySelector('#guided-back').disabled = demoState.guided_step === 1;
+  const next = document.querySelector('#guided-next');
+  const actionSteps = [2, 5, 6, 7];
+  next.hidden = actionSteps.includes(demoState.guided_step);
+  next.textContent = demoState.guided_step === 9 ? 'Finish' : 'Continue';
+  const targets = ['#career-dna-summary', '#role-readiness-card', '#analysis', '#career-horizon', '#achievement-status', '#achievement-status', '#add-achievement', '#comparison', '#career-horizon'];
+  if (demoState.guided_step === 9) {
+    const careerDnaDetails = document.querySelector('#career-dna-details');
+    if (careerDnaDetails) careerDnaDetails.open = false;
+  }
+  revealGuidedSection(targets[demoState.guided_step - 1]);
+  if (demoState.guided_step === 9) document.querySelector('#guided-status').textContent = 'Guided demo complete. Explore the updated Career DNA or restart the demonstration session.';
 }
 async function startGuidedDemo() {
-  if (!sessionEntries.length) {
-    roleSelector.value = 'ROLE-003';
-    await resetSession({ resetWorkbench: true });
-  }
-  guidedStep = 0;
+  await resetGuidedDemo({ keepPanel: true });
+  demoState.guided_active = true;
   document.querySelector('#guided-panel').classList.add('guided-active');
   renderGuided();
 }
@@ -347,11 +368,12 @@ function endGuidedDemo() {
 }
 
 document.querySelector('#start-guided').onclick = startGuidedDemo;
-document.querySelector('#guided-next').onclick = () => { if (guidedStep < guidedSteps.length - 1) { guidedStep += 1; renderGuided(); } else endGuidedDemo(); };
-document.querySelector('#guided-back').onclick = () => { if (guidedStep) { guidedStep -= 1; renderGuided(); } };
+document.querySelector('#analyze-role').onclick = async () => { await analyzeSelectedRole(); renderGuided(); };
+document.querySelector('#guided-next').onclick = () => { if (demoState.guided_step < 9 && updateGuidedStep(demoState, demoState.guided_step + 1)) renderGuided(); else if (demoState.guided_step === 9) endGuidedDemo(); };
+document.querySelector('#guided-back').onclick = () => { if (updateGuidedStep(demoState, demoState.guided_step - 1)) renderGuided(); };
 document.querySelector('#guided-exit').onclick = endGuidedDemo;
 document.querySelector('#reset-demo').onclick = async () => {
-  if (confirm('Reset active session evidence and restart the guided demo?')) { await resetSession({ resetWorkbench: true }); guidedStep = 0; endGuidedDemo(); document.querySelector('#guided-status').textContent = 'Demo reset. Approved Career DNA remains unchanged.'; }
+  if (confirm('Reset active session evidence and restart the guided demo?')) { await resetGuidedDemo(); document.querySelector('#guided-status').textContent = 'Demo reset. Approved Career DNA remains unchanged.'; }
 };
 
 loadBaseline().catch((error) => { status.textContent = `CareerOS could not load the local demo: ${error.message}`; renderAnalysis(); });
