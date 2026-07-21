@@ -140,6 +140,11 @@ li {
   margin: .85rem 0;
 }
 
+#sixty-seconds-title > .sixty-seconds-slogan {
+  margin: 0 0 3rem;
+  font-weight: 750;
+}
+
 .eyebrow {
   margin: 0;
   color: #8dd5ff;
