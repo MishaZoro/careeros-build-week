@@ -25,7 +25,8 @@ async function filesUnder(directory) {
 }
 
 assert.equal(existsSync(join(appRoot, 'data', 'evidence.json')), true, 'approved Career DNA should be present in the package-local curated directory');
-assert.equal(existsSync(join(appRoot, 'data', 'candidate-approval-review.json')), true, 'sanitized candidate review data should be package-local');
+// Candidate review is derived from tracked evidence; no standalone sanitized candidate-review artifact is currently tracked.
+assert.equal(existsSync(join(appRoot, 'data', 'target-roles.json')), true, 'approved target roles should be present in the package-local curated directory');
 assert.equal(existsSync(join(appRoot, 'data', 'CareerOS.xlsx')), false, 'workbook data must not be packaged');
 for (const file of await filesUnder(publicRoot)) {
   const content = (await readFile(file, 'utf8')).toLowerCase();
