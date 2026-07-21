@@ -6,27 +6,31 @@ Most career tools wake up when someone loses a job or starts applying. CareerOS 
 
 ## Three-minute primary demo
 
-1. Open the **Career Command Center**. State that the 18 approved records are structured professional memory, not resume keywords. The summary shows classifications, public-safe source categories, and strongest capabilities.
-2. Select **Start Guided Demo**. On step two, CareerOS selects `ROLE-003`, the strategic-stretch role. Show 78% baseline readiness, the requirement groups, and **Why?** traceability.
-3. Point out the **Honest domain-gap management** caution. The product does not claim direct advanced-domain ownership without evidence.
-4. At **Add Achievement**, use **Load Demo Achievement**. Say clearly: this is the **Synthetic Build Week Demonstration**, never a historical accomplishment. Validate and add it.
-5. Show the governed update: 18 baseline records plus one session record equals 19 Active Career DNA records. The baseline remains unchanged.
-6. In **What Changed**, show the real deterministic result: readiness 78% to 79%; Technology-transition planning moves from Adjacent 78% to Direct 86%; the domain caution remains.
-7. Show the single deterministic next action, then the six-stage lifecycle. Close: a resume tells you where someone has been; CareerOS helps them decide what evidence to build next.
+1. **Career DNA:** Open the Career Command Center and select **Start Guided Demo**. Explain that the 18 approved baseline records are structured professional memory, not resume keywords.
+2. **Choose a Career Direction:** Confirm the selected role is **Director of Growth, Advanced Technology**, then select **Analyze This Direction**.
+3. **Review Current Readiness:** Show the deterministic 78% baseline readiness, requirement groups, traceability, and the retained **Honest domain-gap management** caution.
+4. **Explore Career Horizon:** Show the evidence-supported direction, persistent limitation, and next evidence worth building.
+5. **Recommended Evidence:** Review **AI-enabled Capture Workflow Pilot** and explain why CareerOS recommends it. State clearly that it is a synthetic Build Week demonstration record, not an actual historical accomplishment. Select **Use This Achievement**.
+6. **Review and Validate Evidence:** Review the human-readable evidence summary, source controls, classification, and retained limitation. Select **Validate Evidence**.
+7. **Add to Career DNA:** Confirm the loaded and validated status badges, then select **Add to Career DNA**. The validated session record is added exactly once; the approved baseline remains unchanged.
+8. **See What Changed:** Show active session records changing from 0 to 1, readiness changing from 78% to 82%, and AI pilot leadership changing from Adjacent to Direct. Point out that the retained limitation remains visible. Select **Explore Updated Career Intelligence**.
+9. **Explore Updated Career Intelligence:** Show the updated readiness, Career Horizon, new active evidence record, single timeline record, and next recommended action.
+
+Close: CareerOS strengthened what the evidence supports and preserved what it does not.
 
 ## One-minute architecture explanation
 
-The current Build Week experience is deliberately local and deterministic. The public demo loads only an allowlisted, read-only derivative of approved records. The Analysis Engine classifies requirements against traceable capabilities. The Growth Loop validates one session-only achievement, preserves lineage and restrictions, recomputes the analysis, and never mutates the approved baseline. No LLM, external API, database, private source material, or automatic job-description parsing is used.
+The current Build Week experience is deliberately local and deterministic. The public demo loads only an allowlisted, read-only derivative of 18 approved demonstration records. The Analysis Engine classifies requirements against traceable capabilities. The Growth Loop validates one synthetic session-only achievement, preserves lineage and restrictions, recomputes the analysis, and never mutates the approved baseline. No LLM, external API, database, private source material, or automatic job-description parsing is used by the running demo.
 
 ## Likely judge questions
 
 - **Is this just a resume tool?** No. A resume is selected history. Career DNA preserves evidence, context, limitations, and growth behind that history.
-- **Where does AI come in?** This Build Week demo is deterministic by design. Production AI is not implemented or implied here.
+- **Where does AI come in?** The running Build Week demo is deterministic by design. GPT-5.6 helped shape strategy and specifications; Codex inspected and changed the repository, repaired the flow, and ran tests. Production AI is not implemented or implied here.
 - **Why is the current demo deterministic?** It makes every conclusion inspectable and prevents fabricated reasoning while the evidence-governance model is demonstrated.
-- **How does CareerOS learn?** It adds validated evidence to governed Career DNA. It does not silently train or invent facts.
-- **How do you prevent fabricated achievements?** The fixture is labeled synthetic. Other inputs are validated, session-only, and cannot alter the approved public baseline.
-- **What happens to private evidence?** It remains private and session-only unless a sanitized derivative is explicitly approved through the data policy.
-- **Why does the score only increase by one point?** Evidence only affects the requirements it actually supports. Unsupported domain gaps remain caution rather than becoming strengths.
+- **How does CareerOS learn?** It adds validated evidence to governed Active Career DNA. It does not silently train or invent facts.
+- **How do you prevent fabricated achievements?** The recommended record is explicitly labeled synthetic and is never presented as a historical accomplishment. Validation preserves its lineage, restrictions, classification, and limitation.
+- **What happens to private evidence?** The public demo does not require private career information. Future private evidence would remain private unless a sanitized derivative were explicitly approved through the data policy.
+- **Why does readiness increase by four points?** Evidence affects only the requirements it supports. The AI pilot evidence changes readiness from 78% to 82%, while unsupported advanced-domain gaps remain caution rather than becoming strengths.
 - **Can users paste any job description?** Not in this Build Week demo. It uses three prepared target roles; automatic job-description parsing is future work.
 - **What would production architecture add?** Approved private-data adapters, user authentication, persistence, and carefully governed AI assistance after separate product and privacy work.
 - **How is CareerOS different from LinkedIn or an ATS?** It is a governed evidence and growth system, not a profile, keyword matcher, or applicant tracking system.
@@ -36,4 +40,4 @@ The current Build Week experience is deliberately local and deterministic. The p
 
 ## Backup path and exact reset
 
-If text entry is unavailable or a judge skips a step, select **Load Demo Achievement**, then **Validate** and **Add to Career DNA**. If the fixture is already present or a stale session exists, select **Reset Demo**, confirm the prompt, and select **Start Guided Demo** again. Reset removes only session evidence, restores baseline analysis, and does not modify `evidence.json`.
+If a judge exits the walkthrough, select **Reset Session**, confirm the prompt, and select **Start Guided Demo** again. Follow the explicit action at each action-required step: **Analyze This Direction**, **Use This Achievement**, **Validate Evidence**, **Add to Career DNA**, and **Explore Updated Career Intelligence**. Reset removes only session evidence, restores 78% baseline readiness and zero active session records, and does not modify `data/evidence.json`.

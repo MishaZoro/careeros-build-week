@@ -1,15 +1,35 @@
 # CareerOS Build Week Final Demo Setup
 
+## Prerequisites
+
+- Git
+- Node.js
+- npm
+
+## Clone and install
+
 ```text
-cd apps/buildweek-demo
-node server.mjs
+git clone https://github.com/MishaZoro/careeros-build-week.git
+cd careeros-build-week/apps/buildweek-demo
+npm install
+```
+
+## Run the application
+
+From `apps/buildweek-demo`:
+
+```text
+npm start
 ```
 
 Open `http://127.0.0.1:4173`.
 
-Canonical test command:
+## Run verification
+
+From `apps/buildweek-demo`:
 
 ```text
-cd apps/buildweek-demo
 npm test
 ```
+
+The application uses deterministic public-safe demonstration data and does not require private career information or an external AI API.
